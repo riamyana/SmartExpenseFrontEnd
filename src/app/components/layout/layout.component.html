@@ -1,0 +1,38 @@
+<div class="container">
+    <mat-drawer-container class="drawer-container" autosize class="drawer">
+      <mat-drawer #drawer class="sidenav" mode="side" opened>
+        <mat-nav-list>
+            @for (menu of menuItems; track menu) {
+                <a
+                    mat-list-item
+                    href="{{menu.link}}"
+                    (click)="onMenuClicked(menu)"
+                    [activated]="activeMenu === menu.name"
+                >
+                    <mat-icon matListItemIcon>folder</mat-icon>
+                    {{menu.name}}
+                </a>
+            }
+        </mat-nav-list>
+
+      </mat-drawer>
+
+      <mat-drawer-content>
+         <div class="sidenav-content">
+            <button type="button" (click)="drawer.toggle()">
+            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="menu"></mat-icon>
+            </button>
+        </div>
+        <!-- <mat-toolbar color="primary">
+            <button mat-icon-button (click)="drawer.toggle()">
+                <mat-icon>menu</mat-icon>
+            </button>
+        </mat-toolbar> -->
+        <span>Smart Expense</span>
+
+        <div class="content">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-drawer-content>
+    </mat-drawer-container>
+</div>

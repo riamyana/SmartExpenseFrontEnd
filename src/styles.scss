@@ -1,1 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+/* Define theme */
+$theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+));
+
+/* Apply theme */
+:root {
+  @include mat.all-component-themes($theme);
+  --primary: #05305b;
+
+   @include mat.list-overrides((
+    // list-item-container-color: white,
+    list-item-label-text-color: white,
+    active-indicator-shape: 16px,
+    active-indicator-color: rgba(255, 255, 255, 0.1),
+    list-item-hover-state-layer-opacity: 0.5,
+    list-item-hover-label-text-color: white,
+    list-item-focus-label-text-color: white,
+  ));
+}
+
+/* Your base styles */
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;}

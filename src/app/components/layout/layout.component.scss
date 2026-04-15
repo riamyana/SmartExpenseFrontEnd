@@ -1,0 +1,16 @@
+.container {
+    height: 100%;
+    width: 100%;
+    background-color: #f8fafc;
+}
+
+.drawer {
+    height: 100%;
+    --mat-sidenav-container-shape: 0;
+}
+
+.sidenav {
+    border: 1px solid var(--mat-fab-foreground-color);
+    // background-color: var(--primary);
+    background-color: #0f172a;
+}
