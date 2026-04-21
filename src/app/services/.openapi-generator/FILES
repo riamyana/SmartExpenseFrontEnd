@@ -1,10 +1,14 @@
 .gitignore
-.openapi-generator-ignore
 README.md
 api.base.service.ts
 api.module.ts
 api/api.ts
+api/budgets.service.ts
+api/categories.service.ts
 api/default.service.ts
+api/expenses.service.ts
+api/merchant.service.ts
+api/source.service.ts
 configuration.ts
 encoder.ts
 git_push.sh

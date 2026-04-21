@@ -1,1 +1,32 @@
-<p>categories works!</p>
+<div class="container">
+    <button mat-button (click)="addCategory()">Add New Category</button>
+    <div class="categories">
+        <ng-container *ngFor="let category of categories">
+            <mat-card appearance="outlined">
+              <mat-card-header>
+                <mat-card-title>{{category.name}}</mat-card-title>
+                <mat-card-subtitle>{{category.description}}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-actions align="end">
+                <button mat-button (click)="editCategory()">Edit</button>
+                <button mat-button (click)="confirmDelete(category)">Delete</button>
+              </mat-card-actions>
+            </mat-card>
+        </ng-container>
+    </div>
+    
+    <ng-template #deleteDialog let-data>
+        <h2 mat-dialog-title>Delete</h2>
+
+        <mat-dialog-content>
+            Are you sure you want to delete {{data.name}}?
+        </mat-dialog-content>
+
+        <mat-dialog-actions align="end">
+            <button mat-button mat-dialog-close="false">Cancel</button>
+            <button mat-raised-button color="warn" [mat-dialog-close]="true">
+            Delete
+            </button>
+        </mat-dialog-actions>
+    </ng-template>
+</div>
