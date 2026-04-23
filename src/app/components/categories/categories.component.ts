@@ -3,13 +3,14 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CategoriesService } from '../../services/api/categories.service';
 import { CategoryModel } from '../../services/model/categoryModel';
 import { CategoryDialogComponent } from './category-dialog/category-dialog.component';
 
 @Component({
   selector: 'app-categories',
-  imports: [MatCardModule, MatDialogModule, MatButtonModule, CommonModule],
+  imports: [MatCardModule, MatDialogModule, MatButtonModule, MatSnackBarModule, CommonModule],
   templateUrl: './categories.component.html',
   styleUrl: './categories.component.scss'
 })
@@ -22,8 +23,8 @@ export class CategoriesComponent implements OnInit {
 
   categories: CategoryModel[] = [];
 
-  async ngOnInit(): Promise<void> {
-    await this.categoriesService.getAllCategoryCategoryGet().subscribe({
+  ngOnInit(): void {
+    this.categoriesService.getAllCategoryCategoryGet().subscribe({
       next: (data) => {
         this.categories = data;
         console.log(this.categories);
@@ -37,10 +38,22 @@ export class CategoriesComponent implements OnInit {
       width: '400px'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log('User data:', result);
-        // 👉 call API here
+    dialogRef.afterClosed().subscribe((category: CategoryModel) => {
+      if (category) {
+        const addRequest: CategoryModel = {
+          name: category.name,
+          description: category.description
+        }
+        this.categoriesService.addCategoryCategoryPost(addRequest).subscribe({
+          next: (data) => {
+            // snackBar.open('Message archived', 'Undo', {
+            //   duration: 3000
+            // });
+            console.log(data);
+          },
+          error: (err) => console.error(err)
+        })
+        console.log('User data:', category);
       }
     });
   }
@@ -50,12 +63,16 @@ export class CategoriesComponent implements OnInit {
       data: category
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log('Delete confirmed', category);
-
-        // 👉 call delete API here
-        // this.categoryService.delete(category.id)
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.categoriesService.getCategoryByIdCategoryIdDelete(category.id!).subscribe({
+          next: (data) => {
+            console.log('Delete confirmed: ', data);
+          },
+          error: (err) => {
+            console.error(err);
+          }
+        })
       }
     });
   }
