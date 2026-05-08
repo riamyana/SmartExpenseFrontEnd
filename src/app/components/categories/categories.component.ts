@@ -65,7 +65,7 @@ export class CategoriesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) {
-        this.categoriesService.getCategoryByIdCategoryIdDelete(category.id!).subscribe({
+        this.categoriesService.deleteCategoryByIdCategoryIdDelete(category.id!).subscribe({
           next: (data) => {
             console.log('Delete confirmed: ', data);
           },

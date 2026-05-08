@@ -5,4 +5,5 @@ export * from './hTTPValidationError';
 export * from './locationInner';
 export * from './merchantModel';
 export * from './sourceModel';
+export * from './transactionModel';
 export * from './validationError';

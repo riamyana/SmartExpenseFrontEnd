@@ -1,1 +1,55 @@
-<p>expenses works!</p>
+<div class="top-buttons-container">
+  <div>
+    <input type="file" (change)="onFileSelected($event)" />
+    
+    <button mat-raised-button color="primary" (click)="upload()">
+      Upload Statement
+    </button>
+  </div>
+
+  <div>
+    <button>Add expense</button>
+  </div>
+</div>
+
+<app-loader [isLoading]="loading"></app-loader>
+
+<div class="table-container">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="dataSource && dataSource.length > 0">
+  
+    <ng-container matColumnDef="srNo">
+      <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
+      <td mat-cell *matCellDef="let row; let i = index"> {{ i + 1 }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef> Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> Description </th>
+      <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="withdrawal">
+      <th mat-header-cell *matHeaderCellDef> Withdrawal </th>
+      <td mat-cell *matCellDef="let element"> {{element.withdrawal}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="deposit">
+      <th mat-header-cell *matHeaderCellDef> Deposit </th>
+      <td mat-cell *matCellDef="let element"> {{element.deposit}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef> Delete </th>
+      <td mat-cell *matCellDef="let element"> <button>Delete</button> </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+
+

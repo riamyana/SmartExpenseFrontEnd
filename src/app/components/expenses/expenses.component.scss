@@ -1,0 +1,11 @@
+.table-container {
+  position: relative;
+  min-height: 200px;
+  max-height: 400px;
+  overflow: auto;
+}
+
+.top-buttons-container {
+    display: flex;
+    justify-content: space-between;
+}

@@ -21,6 +21,7 @@ model/locationInner.ts
 model/merchantModel.ts
 model/models.ts
 model/sourceModel.ts
+model/transactionModel.ts
 model/validationError.ts
 param.ts
 provide-api.ts
