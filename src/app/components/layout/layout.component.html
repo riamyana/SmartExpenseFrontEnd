@@ -1,37 +1,40 @@
-<div class="container">
-    <mat-drawer-container class="drawer-container" autosize class="drawer">
-      <mat-drawer #drawer class="sidenav" mode="side" opened>
-        <mat-nav-list>
-            @for (menu of menuItems; track menu) {
-                <a
-                    mat-list-item
-                    href="{{menu.link}}"
-                    (click)="onMenuClicked(menu)"
-                    [activated]="activeMenu === menu.name"
-                >
-                    <mat-icon matListItemIcon>folder</mat-icon>
-                    {{menu.name}}
-                </a>
-            }
-        </mat-nav-list>
+<div class="app-shell">
+  <mat-drawer-container class="drawer-container" autosize>
+    <mat-drawer #drawer class="sidenav" mode="side" opened>
+      <div class="brand">
+        <span class="brand-mark">SE</span>
+        <span>Smart Expense</span>
+      </div>
 
-      </mat-drawer>
+      <mat-nav-list>
+        @for (menu of menuItems; track menu.name) {
+          <a
+            mat-list-item
+            [routerLink]="menu.link"
+            routerLinkActive="active-link"
+            [routerLinkActiveOptions]="{ exact: menu.link === '' }"
+          >
+            <mat-icon matListItemIcon>{{menu.name === 'Dashboard' ? 'dashboard' : menu.name === 'Expenses' ? 'receipt_long' : menu.name === 'Budgets' ? 'account_balance_wallet' : 'category'}}</mat-icon>
+            <span matListItemTitle>{{menu.name}}</span>
+          </a>
+        }
+      </mat-nav-list>
+    </mat-drawer>
 
-      <mat-drawer-content>
-         <div class="sidenav-content">
-            <button type="button" (click)="drawer.toggle()">
-            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="menu"></mat-icon>
-            </button>
+    <mat-drawer-content>
+      <header class="topbar">
+        <button mat-icon-button type="button" (click)="drawer.toggle()" aria-label="Toggle navigation">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <div>
+          <p>Workspace</p>
+          <h1>Smart Expense</h1>
         </div>
-        <!-- <mat-toolbar color="primary">
-            <button mat-icon-button (click)="drawer.toggle()">
-                <mat-icon>menu</mat-icon>
-            </button>
-        </mat-toolbar> -->
+      </header>
 
-        <div class="content">
-            <router-outlet></router-outlet>
-        </div>
+      <main class="content">
+        <router-outlet></router-outlet>
+      </main>
     </mat-drawer-content>
-    </mat-drawer-container>
+  </mat-drawer-container>
 </div>

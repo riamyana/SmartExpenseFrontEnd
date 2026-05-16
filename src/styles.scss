@@ -14,7 +14,13 @@ $theme: mat.define-theme((
 /* Apply theme */
 :root {
   @include mat.all-component-themes($theme);
-  --primary: #05305b;
+  --primary: #14213d;
+  --accent: #21a67a;
+  --surface: #ffffff;
+  --page-bg: #f6f8fb;
+  --border: #e5e9f0;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
 
    @include mat.list-overrides((
     // list-item-container-color: white,
@@ -25,8 +31,51 @@ $theme: mat.define-theme((
     list-item-hover-label-text-color: white,
     list-item-focus-label-text-color: white,
   ));
+
+  --se-dialog-title: #1c2237;
 }
 
 /* Your base styles */
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;}
+body {
+  margin: 0;
+  color: var(--text-primary);
+  background: var(--page-bg);
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.flexdiv {
+  display: flex;
+}
+
+.flex-row {
+  flex-direction: row;
+  gap: 16px;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+mat-dialog-title {
+  color: var(--se-dialog-title);
+}
+
+.snackbar-success {
+  --mdc-snackbar-container-color: #1f9d68;
+  --mdc-snackbar-supporting-text-color: #ffffff;
+  --mat-snack-bar-button-color: #ffffff;
+
+  .mdc-snackbar__surface {
+    border-radius: 8px;
+    box-shadow: 0 12px 28px rgba(31, 157, 104, 0.28);
+  }
+}
