@@ -1,21 +1,16 @@
 <div class="top-buttons-container">
   <div>
-    <input type="file" (change)="onFileSelected($event)" />
-    
-    <button mat-raised-button color="primary" (click)="upload()">
-      Upload Statement
-    </button>
+    <p>Saved records</p>
+    <h2>Transactions</h2>
   </div>
 
-  <div>
-    <button>Add expense</button>
+  <div class="page-actions">
+    <button mat-raised-button class="action-button upload-button" (click)="openUploadDialog()">Add expenses</button>
   </div>
 </div>
 
-<app-loader [isLoading]="loading"></app-loader>
-
 <div class="table-container">
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="dataSource && dataSource.length > 0">
+  <table mat-table [dataSource]="transactions" class="mat-elevation-z8" *ngIf="transactions.length > 0">
   
     <ng-container matColumnDef="srNo">
       <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
@@ -33,23 +28,32 @@
     </ng-container>
   
     <ng-container matColumnDef="withdrawal">
-      <th mat-header-cell *matHeaderCellDef> Withdrawal </th>
-      <td mat-cell *matCellDef="let element"> {{element.withdrawal}} </td>
+      <th mat-header-cell *matHeaderCellDef class="amount-header"> Withdrawal (&#8377;) </th>
+      <td mat-cell *matCellDef="let element" class="amount-cell">
+        <span class="amount withdrawal-amount">
+          {{ element.withdrawal ? (element.withdrawal | number:'1.2-2') : '-' }}
+        </span>
+      </td>
     </ng-container>
   
     <ng-container matColumnDef="deposit">
-      <th mat-header-cell *matHeaderCellDef> Deposit </th>
-      <td mat-cell *matCellDef="let element"> {{element.deposit}} </td>
+      <th mat-header-cell *matHeaderCellDef class="amount-header"> Deposit (&#8377;) </th>
+      <td mat-cell *matCellDef="let element" class="amount-cell">
+        <span class="amount deposit-amount">
+          {{ element.deposit ? (element.deposit | number:'1.2-2') : '-' }}
+        </span>
+      </td>
     </ng-container>
 
-    <ng-container matColumnDef="delete">
-      <th mat-header-cell *matHeaderCellDef> Delete </th>
-      <td mat-cell *matCellDef="let element"> <button>Delete</button> </td>
-    </ng-container>
-  
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+
+  <div class="empty-state" *ngIf="!loadFailed && transactions.length === 0">
+    No saved transactions yet.
+  </div>
+
+  <div class="empty-state error-state" *ngIf="loadFailed">
+    Could not load saved transactions.
+  </div>
 </div>
-
-

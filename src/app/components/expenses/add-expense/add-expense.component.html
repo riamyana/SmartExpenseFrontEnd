@@ -1,0 +1,67 @@
+<h2 mat-dialog-title class="title">Add Expenses</h2>
+
+<form [formGroup]="formGroup" mat-dialog-content class="dialog-content">
+    <div class="expense-count-panel">
+        <mat-form-field appearance="outline">
+        <mat-label>Number of Expenses</mat-label>
+        <input
+            #numInput
+            matInput
+            type="number"
+            formControlName="numberOfExpenses"
+            (change)="onNumberOfExpensesChange(numInput.value)"
+            min="1">
+        <mat-hint>How many expenses would you like to add?</mat-hint>
+        </mat-form-field>
+    </div>
+
+  <div formArrayName="expenses" class="expense-container">
+    <div
+      *ngFor="let expense of expensesArray.controls; let i = index"
+      [formGroupName]="i"
+      class="expense-item">
+      <div class="expense-header">
+        <h3>Expense {{ i + 1 }}</h3>
+
+        <button
+          type="button"
+          mat-icon-button
+          color="warn"
+          (click)="removeExpenseForm(i)"
+          [disabled]="expensesArray.length === 1"
+          matTooltip="Remove this expense">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
+      <div class="expense-fields">
+        <mat-form-field appearance="outline">
+          <mat-label>Date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="date">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="description-field">
+          <mat-label>Description</mat-label>
+          <input matInput type="text" formControlName="description">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Withdrawal</mat-label>
+          <input matInput type="number" min="0" step="1" formControlName="withdrawal">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Deposit</mat-label>
+          <input matInput type="number" min="0" step="1" formControlName="deposit">
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</form>
+
+<mat-dialog-actions align="center">
+  <button mat-button type="button" (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" type="button" (click)="confirm()" [disabled]="formGroup.invalid">OK</button>
+</mat-dialog-actions>

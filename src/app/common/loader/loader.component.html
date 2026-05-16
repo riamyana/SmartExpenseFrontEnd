@@ -1,4 +1,4 @@
-<div class="loader-overlay" *ngIf="isLoading">
+<div class="loader-overlay" *ngIf="loaderService.loading$ | async">
   <div class="loader-content">
     <mat-spinner diameter="60"></mat-spinner>
     <p class="loader-message">

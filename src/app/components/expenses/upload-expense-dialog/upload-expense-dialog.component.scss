@@ -1,55 +1,30 @@
-:host {
+.upload-dialog-content {
   display: flex;
-  flex: 1;
   flex-direction: column;
-  min-height: 0;
+  gap: 24px;
+  min-width: min(980px, 82vw);
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 
-.table-container {
-  position: relative;
-  flex: 1;
-  min-height: 200px;
-  overflow: auto;
-  margin-top: 20px;
-}
-
-.top-buttons-container {
+.entry-toolbar {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
+  gap: 20px;
   flex-wrap: wrap;
-  margin-bottom: 16px;
-  padding: 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(17, 24, 39, 0.06);
 }
 
-.top-buttons-container p,
-.top-buttons-container h2 {
-  margin: 0;
-}
-
-.top-buttons-container p {
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.top-buttons-container h2 {
-  margin-top: 4px;
-  font-size: 22px;
-}
-
-.page-actions,
-.upload-actions {
+.upload-actions,
+.manual-entry-actions {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.manual-entry-actions mat-form-field {
+  width: 220px;
 }
 
 .file-picker {
@@ -131,64 +106,6 @@
   border-color: #1d946d;
 }
 
-.delete-button {
-  min-width: 72px;
-  color: #b42318;
-  border-radius: 8px;
-  font-weight: 600;
-}
-
-.delete-button:hover {
-  background: #fff1f0;
-}
-
-.amount-header,
-.amount-cell {
-  text-align: right;
-}
-
-.amount {
-  display: inline-block;
-  min-width: 96px;
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-}
-
-.withdrawal-amount {
-  color: #b42318;
-}
-
-.deposit-amount {
-  color: #147a54;
-}
-
-.upload-dialog-content {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  min-width: min(980px, 82vw);
-  padding-top: 12px;
-  padding-bottom: 12px;
-}
-
-.entry-toolbar {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.manual-entry-actions {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.manual-entry-actions mat-form-field {
-  width: 220px;
-}
-
 .draft-table-container {
   max-height: 560px;
   overflow: auto;
@@ -219,9 +136,33 @@
   min-width: 220px;
 }
 
+.amount-header,
+.amount-cell {
+  text-align: right;
+}
+
 .amount-input {
   min-width: 110px;
   text-align: right;
+}
+
+.withdrawal-amount {
+  color: #b42318;
+}
+
+.deposit-amount {
+  color: #147a54;
+}
+
+.delete-button {
+  min-width: 72px;
+  color: #b42318;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.delete-button:hover {
+  background: #fff1f0;
 }
 
 .save-button {
@@ -245,32 +186,19 @@
   cursor: not-allowed;
 }
 
-.empty-state {
-  display: grid;
-  height: 100%;
-  min-height: 220px;
-  place-items: center;
-  color: var(--text-secondary);
-  background: var(--surface);
-  border: 1px dashed var(--border);
-  border-radius: 8px;
-}
-
-.error-state {
-  color: #b42318;
-}
-
 @media (max-width: 640px) {
-  .top-buttons-container,
-  .page-actions,
-  .upload-actions,
   .entry-toolbar,
+  .upload-actions,
   .manual-entry-actions {
     align-items: stretch;
     flex-direction: column;
   }
 
-  .top-buttons-container > div,
+  .upload-dialog-content {
+    min-width: auto;
+  }
+
+  .manual-entry-actions mat-form-field,
   .action-button,
   .file-picker {
     width: 100%;
@@ -279,13 +207,5 @@
   .file-picker {
     justify-content: center;
     max-width: none;
-  }
-
-  .upload-dialog-content {
-    min-width: auto;
-  }
-
-  .manual-entry-actions mat-form-field {
-    width: 100%;
   }
 }
