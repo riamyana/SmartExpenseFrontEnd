@@ -30,6 +30,7 @@ export class ExpensesComponent {
   displayedColumns: string[] = ['srNo', 'date', 'description', 'withdrawal', 'deposit'];
   transactions: TransactionModel[] = [];
   loadFailed = false;
+  uploadDialogOpened = false;
 
   ngOnInit(): void {
     this.loadTransactions();
@@ -57,16 +58,25 @@ export class ExpensesComponent {
   }
 
   openUploadDialog(): void {
-    const dialogRef = this.dialog.open(UploadExpenseDialogComponent, {
-      width: 'min(1180px, 94vw)',
-      maxWidth: '94vw',
-      maxHeight: '92vh'
-    });
-
-    dialogRef.afterClosed().subscribe((saved) => {
-      if (saved) {
-        this.loadTransactions();
-      }
-    });
+    this.uploadDialogOpened = false;
+    try {
+      const dialogRef = this.dialog.open(UploadExpenseDialogComponent, {
+        width: 'min(1320px, 96vw)',
+        maxWidth: '96vw',
+        maxHeight: '94vh',
+        hasBackdrop: false,
+        panelClass: 'expense-dialog-panel'
+      });
+      this.uploadDialogOpened = true;
+  
+      dialogRef.afterClosed().subscribe((saved) => {
+        this.uploadDialogOpened = false;
+        if (saved) {
+          this.loadTransactions();
+        }
+      });
+    } catch (error) {
+      this.uploadDialogOpened = false;
+    }
   }
 }

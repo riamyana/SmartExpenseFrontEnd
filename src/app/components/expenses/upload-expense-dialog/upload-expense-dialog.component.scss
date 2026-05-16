@@ -1,8 +1,17 @@
+.dialog-title {
+  margin: 0;
+  padding: 24px 24px 12px;
+  color: var(--primary);
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+}
+
 .upload-dialog-content {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  min-width: min(980px, 82vw);
+  min-width: min(1120px, 88vw);
   padding-top: 12px;
   padding-bottom: 12px;
 }
@@ -21,6 +30,7 @@
   align-items: flex-start;
   gap: 12px;
   flex-wrap: wrap;
+  padding: 5px;
 }
 
 .manual-entry-actions mat-form-field {
@@ -107,7 +117,7 @@
 }
 
 .draft-table-container {
-  max-height: 560px;
+  max-height: 640px;
   overflow: auto;
 }
 
