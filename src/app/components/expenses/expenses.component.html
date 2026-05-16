@@ -5,7 +5,7 @@
   </div>
 
   <div class="page-actions">
-    <button mat-raised-button class="action-button upload-button" (click)="openUploadDialog()">Add expenses</button>
+    <button mat-raised-button class="action-button upload-button" (click)="openUploadDialog()" [disabled]="uploadDialogOpened">Add expenses</button>
   </div>
 </div>
 

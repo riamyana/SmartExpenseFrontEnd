@@ -79,3 +79,9 @@ mat-dialog-title {
     box-shadow: 0 12px 28px rgba(31, 157, 104, 0.28);
   }
 }
+
+.expense-dialog-panel .mat-mdc-dialog-surface {
+  border: 3px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 24px 64px rgba(17, 24, 39, 0.24);
+}
