@@ -1,32 +1,64 @@
-<div class="container">
-    <button mat-button (click)="addCategory()">Add New Category</button>
-    <div class="categories">
-        <ng-container *ngFor="let category of categories">
-            <mat-card appearance="outlined">
-              <mat-card-header>
-                <mat-card-title>{{category.name}}</mat-card-title>
-                <mat-card-subtitle>{{category.description}}</mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-actions align="end">
-                <button mat-button (click)="editCategory()">Edit</button>
-                <button mat-button (click)="confirmDelete(category)">Delete</button>
-              </mat-card-actions>
-            </mat-card>
-        </ng-container>
+<div class="categories-page">
+  <section class="category-section">
+    <div class="section-header">
+      <div>
+        <p>Built in</p>
+        <h2>System Categories</h2>
+      </div>
+      <span class="count-pill">{{ systemCategories.length }} categories</span>
     </div>
-    
-    <ng-template #deleteDialog let-data>
-        <h2 mat-dialog-title>Delete</h2>
 
-        <mat-dialog-content>
-            Are you sure you want to delete {{data.name}}?
-        </mat-dialog-content>
+    <div class="category-grid" *ngIf="systemCategories.length > 0; else noSystemCategories">
+      <mat-card appearance="outlined" class="category-card system-card" *ngFor="let category of systemCategories">
+        <mat-card-header>
+          <mat-card-title>{{ category.name }}</mat-card-title>
+          <mat-card-subtitle>{{ category.description || 'System managed category' }}</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+    </div>
+  </section>
 
-        <mat-dialog-actions align="end">
-            <button mat-button mat-dialog-close="false">Cancel</button>
-            <button mat-raised-button color="warn" [mat-dialog-close]="true">
-            Delete
-            </button>
-        </mat-dialog-actions>
-    </ng-template>
+  <section class="category-section">
+    <div class="section-header">
+      <div>
+        <p>Manual</p>
+        <h2>Custom Categories</h2>
+      </div>
+      <button mat-raised-button class="add-button" (click)="addCategory()">Add New Category</button>
+    </div>
+
+    <div class="category-grid" *ngIf="customCategories.length > 0; else noCustomCategories">
+      <mat-card appearance="outlined" class="category-card" *ngFor="let category of customCategories">
+        <mat-card-header>
+          <mat-card-title>{{ category.name }}</mat-card-title>
+          <mat-card-subtitle>{{ category.description || 'No description added' }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions align="end">
+          <button mat-button class="edit-button" (click)="editCategory(category)">Edit</button>
+          <button mat-button class="delete-button" (click)="confirmDelete(category)">Delete</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </section>
+
+  <ng-template #noSystemCategories>
+    <div class="empty-state">No system categories found.</div>
+  </ng-template>
+
+  <ng-template #noCustomCategories>
+    <div class="empty-state">No custom categories yet.</div>
+  </ng-template>
+
+  <ng-template #deleteDialog let-data>
+    <h2 mat-dialog-title>Delete Category</h2>
+
+    <mat-dialog-content>
+      Are you sure you want to delete <b>{{ data.name }}</b>?
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close="false">Cancel</button>
+      <button mat-raised-button color="warn" [mat-dialog-close]="true">Delete</button>
+    </mat-dialog-actions>
+  </ng-template>
 </div>

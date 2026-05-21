@@ -9,12 +9,10 @@
  */
 
 
-export interface TransactionModel { 
-    id: number;
-    date?: string;
-    category?: string;
+export interface CategoryModelOutput { 
+    id?: number | null;
+    name?: string;
     description?: string;
-    withdrawal?: number;
-    deposit?: number;
+    isSystem?: boolean;
 }
 
