@@ -7,13 +7,13 @@
   text-align: center;
 }
 
-.upload-dialog-content {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  min-width: min(1120px, 88vw);
-  padding-top: 12px;
-  padding-bottom: 12px;
+.toolbar-container {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  padding: 16px 0;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .entry-toolbar {
@@ -116,26 +116,150 @@
   border-color: #1d946d;
 }
 
+::ng-deep .upload-expense-select-panel {
+  background: #ffffff;
+  color: #1f2937;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
+}
+
+::ng-deep .upload-expense-select-panel .mat-option {
+  color: #111827;
+  background: white;
+  font-weight: 500;
+}
+
+::ng-deep .upload-expense-select-panel .mat-option:hover,
+::ng-deep .upload-expense-select-panel .mat-option.mat-active,
+::ng-deep .upload-expense-select-panel .mat-option.mat-selected {
+  background: #eef4ff;
+  color: #1f2937;
+}
+
 .draft-table-container {
   max-height: 640px;
   overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
 }
 
 .table-input {
-  width: 100%;
-  min-height: 36px;
-  padding: 0 10px;
-  color: var(--text-primary);
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font: inherit;
+  display: none;
 }
 
-.table-input:disabled {
-  color: var(--text-secondary);
-  background: #f6f8fb;
-  cursor: not-allowed;
+.table-field {
+  width: 100%;
+}
+
+.date-field {
+  min-width: 150px;
+}
+
+.category-field {
+  min-width: 170px;
+}
+
+:host ::ng-deep .draft-table-container .mat-mdc-form-field {
+  display: block;
+  margin: 0 auto;
+}
+
+:host ::ng-deep .draft-table-container .mat-mdc-text-field-wrapper {
+  height: 34px;
+  background: #fbfdff;
+  border-radius: 6px;
+}
+
+:host ::ng-deep .draft-table-container .mat-mdc-form-field-flex {
+  height: 34px;
+  align-items: center;
+}
+
+:host ::ng-deep .draft-table-container .mat-mdc-form-field-infix {
+  min-height: 34px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+:host ::ng-deep .draft-table-container .mdc-notched-outline__leading,
+:host ::ng-deep .draft-table-container .mdc-notched-outline__notch,
+:host ::ng-deep .draft-table-container .mdc-notched-outline__trailing {
+  border-color: #d7dee8;
+}
+
+:host ::ng-deep .draft-table-container .mat-focused .mdc-notched-outline__leading,
+:host ::ng-deep .draft-table-container .mat-focused .mdc-notched-outline__notch,
+:host ::ng-deep .draft-table-container .mat-focused .mdc-notched-outline__trailing {
+  border-color: var(--accent);
+}
+
+:host ::ng-deep .draft-table-container .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+:host ::ng-deep .date-field .mat-datepicker-toggle {
+  width: 28px;
+  height: 28px;
+}
+
+:host ::ng-deep .category-field .mat-mdc-select-trigger {
+  height: 24px;
+  align-items: center;
+}
+
+.draft-table-container table {
+  border-collapse: collapse;
+  width: 100%;
+  background: var(--surface);
+}
+
+.draft-table-container th,
+.draft-table-container td {
+  padding: 6px 8px;
+  vertical-align: middle;
+}
+
+.draft-table-container td {
+  text-align: center;
+}
+
+.draft-table-container th {
+  color: #334155;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: left;
+  background: #f8fafc;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.draft-table-container tr:hover td {
+  background: #f9fbff;
+}
+
+.draft-table-container .mat-form-field {
+  width: 100%;
+  margin: 0;
+}
+
+.draft-table-container .mat-form-field-appearance-outline .mat-form-field-outline {
+  border-color: #cbd5e1;
+}
+
+.draft-table-container .mat-form-field-infix {
+  padding: 0 10px;
+  min-height: 42px;
+  align-items: center;
+}
+
+.draft-table-container .mat-select-trigger {
+  min-height: 42px;
+}
+
+.draft-table-container .mat-input-element {
+  padding: 10px 0;
 }
 
 .date-input {
@@ -154,6 +278,29 @@
 .amount-input {
   min-width: 110px;
   text-align: right;
+}
+
+:host ::ng-deep .amount-input input,
+:host ::ng-deep .mat-column-withdrawal input,
+:host ::ng-deep .mat-column-deposit input {
+  text-align: right;
+}
+
+.mat-column-withdrawal,
+.mat-column-deposit {
+  text-align: right !important;
+}
+
+.mat-column-description {
+  text-align: left;
+}
+
+.mat-column-date {
+  width: 170px;
+}
+
+.mat-column-category {
+  width: 190px;
 }
 
 .withdrawal-amount {
@@ -194,6 +341,32 @@
   border-color: #cbd5e1 !important;
   background: #f8fafc !important;
   cursor: not-allowed;
+}
+
+table {
+  table-layout: fixed;
+  width: 100% !important;
+}
+
+.mat-column-srNo {
+  width: 48px;
+  max-width: 48px;
+  padding-inline: 6px !important;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.mat-column-delete {
+  width: 72px;
+  max-width: 72px;
+  padding-inline: 6px !important;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.mat-column-delete .delete-button {
+  min-width: 56px;
+  padding-inline: 8px;
 }
 
 @media (max-width: 640px) {

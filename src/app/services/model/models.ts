@@ -1,5 +1,6 @@
 export * from './budgetModel';
-export * from './categoryModel';
+export * from './categoryModelInput';
+export * from './categoryModelOutput';
 export * from './expenseModel';
 export * from './hTTPValidationError';
 export * from './locationInner';

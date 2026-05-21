@@ -14,7 +14,8 @@ encoder.ts
 git_push.sh
 index.ts
 model/budgetModel.ts
-model/categoryModel.ts
+model/categoryModelInput.ts
+model/categoryModelOutput.ts
 model/expenseModel.ts
 model/hTTPValidationError.ts
 model/locationInner.ts
