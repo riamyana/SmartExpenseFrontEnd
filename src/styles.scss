@@ -80,6 +80,16 @@ mat-dialog-title {
   }
 }
 
+.mat-mdc-header-row {
+  background: white !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  z-index: 10 !important;
+}
+
+.mat-mdc-table-sticky {
+  background: white !important;
+}
+
 .mat-mdc-dialog-content {
   padding-right: 0 !important;
 }

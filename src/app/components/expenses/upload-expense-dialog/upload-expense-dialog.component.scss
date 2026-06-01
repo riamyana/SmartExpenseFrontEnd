@@ -1,3 +1,7 @@
+.upload-dialog-content {
+  overflow: hidden;
+}
+
 .dialog-title {
   margin: 0;
   padding: 24px 24px 12px;
@@ -137,6 +141,7 @@
 
 .draft-table-container {
   max-height: 640px;
+  height: 480px;
   overflow: auto;
   border: 1px solid var(--border);
   border-radius: 8px;

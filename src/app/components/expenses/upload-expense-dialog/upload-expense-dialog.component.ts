@@ -65,14 +65,14 @@ export class UploadExpenseDialogComponent implements OnInit {
     return this.draftForm.get('draftRows') as FormArray;
   }
 
-  private createDraftGroup(transaction?: Partial<TransactionModel>, uploadedDraft = false): FormGroup {
+  private createDraftGroup(transaction?: Partial<TransactionModel>, disabled = false): FormGroup {
     return this.fb.group({
       id: [transaction?.id ?? this.nextDraftId--],
-      date: [{value: transaction?.date ?? '', disabled: uploadedDraft}, Validators.required],
+      date: [{value: transaction?.date ?? '', disabled}, Validators.required],
       category: [transaction?.category ?? '', Validators.required],
       description: [transaction?.description ?? '', Validators.required],
-      withdrawal: [{value: transaction?.withdrawal ?? 0, disabled: uploadedDraft}, [Validators.min(0)]],
-      deposit: [{value: transaction?.deposit ?? 0, disabled: uploadedDraft}, [Validators.min(0)]],
+      withdrawal: [{value: transaction?.withdrawal ?? 0, disabled}, [Validators.min(0)]],
+      deposit: [{value: transaction?.deposit ?? 0, disabled}, [Validators.min(0)]],
     });
   }
 
@@ -93,7 +93,7 @@ export class UploadExpenseDialogComponent implements OnInit {
       next: (data) => {
         data.forEach((transaction) => {
           this.uploadedDraftIds.add(transaction.id);
-          this.draftRows.push(this.createDraftGroup(transaction, true));
+          this.draftRows.push(this.createDraftGroup(transaction, false));
         });
         this.loaderService.hide();
         console.log('this.draftRows', this.draftRows);
