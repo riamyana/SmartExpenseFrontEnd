@@ -21,7 +21,7 @@
     </div>
   </div>
   
-  <form [formGroup]="draftForm">
+  <form [formGroup]="draftForm" class="draft-table-container">
     <table mat-table [dataSource]="draftRows.controls" *ngIf="draftRows.length > 0">
       <ng-container matColumnDef="srNo">
         <th mat-header-cell *matHeaderCellDef>Sr No</th>
@@ -86,7 +86,7 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="draftDisplayedColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="draftDisplayedColumns; sticky: true"></tr>
 
       <tr mat-row *matRowDef="let row; columns: draftDisplayedColumns;"></tr>
     </table>
