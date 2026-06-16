@@ -11,10 +11,10 @@
 
 export interface TransactionModel { 
     id: number;
-    date?: string;
-    category?: string;
-    description?: string;
-    withdrawal?: number;
-    deposit?: number;
+    date?: string | null;
+    category?: number;
+    description?: string | null;
+    withdrawal?: number | null;
+    deposit?: number | null;
 }
 
