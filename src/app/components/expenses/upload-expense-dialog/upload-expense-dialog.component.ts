@@ -1,16 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { BASE_MODULE_IMPORTS } from '../../../common/base_modules_imports';
 import { LoaderService } from '../../../common/loader/loader.service';
-import { BASE_PATH, CategoriesService, CategoryModelOutput, TransactionModel } from '../../../services';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { BASE_PATH, CategoriesService, CategoryModelOutput, ExpensesService, TransactionModel } from '../../../services';
 
 @Component({
   selector: 'app-upload-expense-dialog',
@@ -38,6 +38,7 @@ export class UploadExpenseDialogComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialogRef: MatDialogRef<UploadExpenseDialogComponent>,
     private categoriesService: CategoriesService,
+    private expensesService: ExpensesService,
   ) {
     this.manualExpenseControl = new FormControl(1, [Validators.min(1)]);
     this.draftForm = this.fb.group({
@@ -91,6 +92,8 @@ export class UploadExpenseDialogComponent implements OnInit {
 
     this.http.post<TransactionModel[]>(`${this.basePath}/expenses/statements/upload`, formData).subscribe({
       next: (data) => {
+        this.draftRows.clear();
+        this.uploadedDraftIds.clear();
         data.forEach((transaction) => {
           this.uploadedDraftIds.add(transaction.id);
           this.draftRows.push(this.createDraftGroup(transaction, false));
@@ -112,7 +115,6 @@ export class UploadExpenseDialogComponent implements OnInit {
     const rowsToAdd = Math.max(1, Math.floor(this.manualExpenseControl.value || 1));
     for (let i = 0; i < rowsToAdd; i++) {
       this.draftRows.push(this.createDraftGroup());
-      console.log('this.draftRows', this.draftRows);
     }
     this.table?.renderRows();
     this.manualExpenseControl.setValue(1);
@@ -126,7 +128,7 @@ export class UploadExpenseDialogComponent implements OnInit {
   }
 
   get canSaveDrafts(): boolean {
-    return this.draftRows.length > 0 && this.draftRows.controls.every(ctrl => {
+    return this.draftRows.length > 0 && this.draftRows.valid && this.draftRows.controls.every(ctrl => {
       const val = ctrl.value;
       return Boolean(val.date) && Boolean((val.description || '').trim()) && ((Number(val.withdrawal) || 0) > 0 || (Number(val.deposit) || 0) > 0);
     });
@@ -139,14 +141,19 @@ export class UploadExpenseDialogComponent implements OnInit {
   saveExpenses(): void {
     if (!this.canSaveDrafts) return;
 
-    const transactions = this.draftRows.value.map((transaction: any) => ({
-      ...transaction,
+    const transactions: TransactionModel[] = this.draftRows.value.map((transaction: any) => ({
+      id: transaction.id,
+      date: typeof transaction.date === 'string' ? transaction.date : (transaction.date as Date).toISOString().split('T')[0], // Convert to 'YYYY-MM-DD' format
+      // date: (transaction.date as Date).toISOString().split('T')[0], // Convert to 'YYYY-MM-DD' format
+      // date: "2026-06-01",
+      category: transaction.category,
+      description: transaction.description,
       withdrawal: Number(transaction.withdrawal) || 0,
       deposit: Number(transaction.deposit) || 0,
     }));
 
     this.loaderService.show();
-    this.http.post(`${this.basePath}/expenses/transactions/bulk`, transactions).subscribe({
+    this.expensesService.saveExpensesExpensesSavePost(transactions).subscribe({
       next: () => {
         this.loaderService.hide();
         this.snackBar.open('Expenses saved successfully.', '', { duration: 3000, panelClass: ['snackbar-success'] });
