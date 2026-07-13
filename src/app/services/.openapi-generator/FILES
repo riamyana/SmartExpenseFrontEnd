@@ -3,6 +3,7 @@ README.md
 api.base.service.ts
 api.module.ts
 api/api.ts
+api/auth.service.ts
 api/budgets.service.ts
 api/categories.service.ts
 api/default.service.ts

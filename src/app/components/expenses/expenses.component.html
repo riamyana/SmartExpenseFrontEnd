@@ -1,59 +1,27 @@
-<div class="top-buttons-container">
-  <div>
-    <p>Saved records</p>
-    <h2>Transactions</h2>
+<section class="transactions-page">
+  <div class="page-heading"><p>Saved records</p><h2>Transactions</h2></div>
+  <div class="filters-card">
+    <div class="filter-row">
+      <label class="filter-control"><span>Year</span><select [value]="selectedYear" (change)="setYear($any($event.target).value)"><option value="all">All</option><option *ngFor="let year of availableYears" [value]="year">{{ year }}</option></select></label>
+      <label class="filter-control"><span>Month</span><select [value]="selectedMonth" (change)="setMonth($any($event.target).value)"><option value="all">All</option><option *ngFor="let month of months; let i = index" [value]="i">{{ month }}</option></select></label>
+      <label class="search-control"><span aria-hidden="true">⌕</span><input type="search" placeholder="Search" [value]="searchTerm" (input)="setSearch($any($event.target).value)" /></label>
+      <label class="filter-control"><span>Category</span><select [value]="selectedCategory" (change)="setCategory($any($event.target).value)"><option value="all">All</option><option *ngFor="let category of availableCategories" [value]="category">{{ categoryLabel(category) }}</option></select></label>
+      <label class="filter-control"><span>Type</span><select [value]="selectedType" (change)="setType($any($event.target).value)"><option value="all">All</option><option value="expense">Expense</option><option value="income">Income</option></select></label>
+      <label class="filter-control"><span>Sort</span><select [value]="sortOrder" (change)="setSort($any($event.target).value)"><option value="latest">Latest</option><option value="oldest">Oldest</option></select></label>
+      <button mat-raised-button class="action-button upload-button" (click)="openUploadDialog()" [disabled]="uploadDialogOpened">+ Add Expense</button>
+    </div>
   </div>
-
-  <div class="page-actions">
-    <button mat-raised-button class="action-button upload-button" (click)="openUploadDialog()" [disabled]="uploadDialogOpened">Add expenses</button>
+  <div class="table-container" *ngIf="transactions.length > 0; else transactionState">
+    <table mat-table [dataSource]="pagedTransactions" class="transactions-table">
+      <ng-container matColumnDef="srNo"><th mat-header-cell *matHeaderCellDef>Sr. No.</th><td mat-cell *matCellDef="let row; let i = index">{{ ((currentPage - 1) * pageSize) + i + 1 }}</td></ng-container>
+      <ng-container matColumnDef="date"><th mat-header-cell *matHeaderCellDef>Date</th><td mat-cell *matCellDef="let element">{{ element.date | date:'dd MMM' }}</td></ng-container>
+      <ng-container matColumnDef="description"><th mat-header-cell *matHeaderCellDef>Description</th><td mat-cell *matCellDef="let element" class="description-cell">{{ element.description || '—' }}</td></ng-container>
+      <ng-container matColumnDef="withdrawal"><th mat-header-cell *matHeaderCellDef class="amount-header">Withdrawal (₹)</th><td mat-cell *matCellDef="let element" class="amount-cell"><span class="amount withdrawal-amount">{{ element.withdrawal ? (element.withdrawal | number:'1.0-2') : '—' }}</span></td></ng-container>
+      <ng-container matColumnDef="deposit"><th mat-header-cell *matHeaderCellDef class="amount-header">Deposit (₹)</th><td mat-cell *matCellDef="let element" class="amount-cell"><span class="amount deposit-amount">{{ element.deposit ? (element.deposit | number:'1.0-2') : '—' }}</span></td></ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr><tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <div class="no-filtered-results" *ngIf="filteredTransactions.length === 0">No transactions match these filters.</div>
   </div>
-</div>
-
-<div class="table-container">
-  <table mat-table [dataSource]="transactions" class="mat-elevation-z8" *ngIf="transactions.length > 0">
-  
-    <ng-container matColumnDef="srNo">
-      <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
-      <td mat-cell *matCellDef="let row; let i = index"> {{ i + 1 }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef> Date </th>
-      <td mat-cell *matCellDef="let element"> {{element.date}} </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef> Description </th>
-      <td mat-cell *matCellDef="let element"> {{element.description}} </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="withdrawal">
-      <th mat-header-cell *matHeaderCellDef class="amount-header"> Withdrawal (&#8377;) </th>
-      <td mat-cell *matCellDef="let element" class="amount-cell">
-        <span class="amount withdrawal-amount">
-          {{ element.withdrawal ? (element.withdrawal | number:'1.2-2') : '-' }}
-        </span>
-      </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="deposit">
-      <th mat-header-cell *matHeaderCellDef class="amount-header"> Deposit (&#8377;) </th>
-      <td mat-cell *matCellDef="let element" class="amount-cell">
-        <span class="amount deposit-amount">
-          {{ element.deposit ? (element.deposit | number:'1.2-2') : '-' }}
-        </span>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-
-  <div class="empty-state" *ngIf="!loadFailed && transactions.length === 0">
-    No saved transactions yet.
-  </div>
-
-  <div class="empty-state error-state" *ngIf="loadFailed">
-    Could not load saved transactions.
-  </div>
-</div>
+  <ng-template #transactionState><div class="empty-state" *ngIf="!loadFailed">No saved transactions yet.</div><div class="empty-state error-state" *ngIf="loadFailed">Could not load saved transactions.</div></ng-template>
+  <footer class="pagination" *ngIf="transactions.length > 0"><button type="button" (click)="previousPage()" [disabled]="currentPage === 1">‹ Previous</button><span>Page {{ currentPage }} of {{ totalPages }}</span><button type="button" (click)="nextPage()" [disabled]="currentPage === totalPages">Next ›</button></footer>
+</section>
