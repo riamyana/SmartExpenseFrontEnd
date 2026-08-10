@@ -11,11 +11,13 @@
 
 export interface ExpenseModel { 
     id?: number | null;
-    amount?: number;
+    withdrawal?: number;
+    deposit?: number;
     description?: string;
-    categoryId?: number;
+    category_id?: number;
+    category_name?: string;
     sourceId?: number;
     merchantId?: number;
-    transactionDate?: string;
+    transaction_date?: string;
 }
 

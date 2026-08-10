@@ -2,6 +2,7 @@ export * from './budgetModel';
 export * from './categoryModelInput';
 export * from './categoryModelOutput';
 export * from './expenseModel';
+export * from './expenseResponse';
 export * from './hTTPValidationError';
 export * from './locationInner';
 export * from './merchantModel';

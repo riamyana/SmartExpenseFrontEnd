@@ -70,7 +70,7 @@ export class UploadExpenseDialogComponent implements OnInit {
     return this.fb.group({
       id: [transaction?.id ?? this.nextDraftId--],
       date: [{value: transaction?.date ?? '', disabled}, Validators.required],
-      category: [transaction?.category ?? '', Validators.required],
+      category: [transaction?.category_id ?? '', Validators.required],
       description: [transaction?.description ?? '', Validators.required],
       withdrawal: [{value: transaction?.withdrawal ?? 0, disabled}, [Validators.min(0)]],
       deposit: [{value: transaction?.deposit ?? 0, disabled}, [Validators.min(0)]],
@@ -146,7 +146,7 @@ export class UploadExpenseDialogComponent implements OnInit {
       date: typeof transaction.date === 'string' ? transaction.date : (transaction.date as Date).toISOString().split('T')[0], // Convert to 'YYYY-MM-DD' format
       // date: (transaction.date as Date).toISOString().split('T')[0], // Convert to 'YYYY-MM-DD' format
       // date: "2026-06-01",
-      category: transaction.category,
+      category_id: transaction.category,
       description: transaction.description,
       withdrawal: Number(transaction.withdrawal) || 0,
       deposit: Number(transaction.deposit) || 0,

@@ -3,7 +3,7 @@ import { Component, Inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { BASE_MODULE_IMPORTS } from '../../common/base_modules_imports';
 import { LoaderService } from '../../common/loader/loader.service';
-import { BASE_PATH, TransactionModel } from '../../services';
+import { BASE_PATH, ExpenseResponse, ExpensesService, TransactionModel } from '../../services';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +24,7 @@ export class ExpensesComponent {
     private loaderService: LoaderService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
+    private expenseService: ExpensesService,
   ) {
   }
 
@@ -50,19 +51,24 @@ export class ExpensesComponent {
     this.loaderService.show();
 
     // todo come back to this. # NotImplemented.
-    this.http.get<TransactionModel[] | { data?: TransactionModel[] }>(`${this.basePath}/expenses/transactions`).subscribe({
+    this.expenseService.getExpensesExpensesGet(1, 50, 2026).subscribe({
       next: (data) => {
-        this.transactions = Array.isArray(data) ? data : data.data ?? [];
+        this.loaderService.hide();
+        this.transactions = (data as ExpenseResponse).data?.map(expense => ({
+          id: expense.id ?? 0,
+          date: expense.transaction_date ?? '',
+          category_name: expense.category_name ?? '',
+          description: expense.description ?? '',
+          withdrawal: expense.withdrawal ?? 0,
+          deposit: expense.deposit ?? 0
+        })) ?? [];
         this.currentPage = 1;
-        this.loaderService.hide();
         this.snackBar.open('Transactions loaded successfully.', '', { duration: 3000, panelClass: ['snackbar-success'] });
+        console.log('Loaded transactions from service:', data);
       },
-      error: (error) => {
-        console.error('Error loading saved transactions:', error);
-        this.loadFailed = true;
-        this.transactions = [];
+      error: (err) => {
+        console.error(err);
         this.loaderService.hide();
-        this.snackBar.open('Failed to load transactions.', '', { duration: 3000, panelClass: ['snackbar-error'] });
       }
     });
   }
@@ -71,8 +77,14 @@ export class ExpensesComponent {
     return [...new Set(this.transactions.map(transaction => this.transactionDate(transaction)?.getFullYear()).filter((year): year is number => year !== undefined))].sort((a, b) => b - a);
   }
 
-  get availableCategories(): number[] {
-    return [...new Set(this.transactions.map(transaction => transaction.category).filter((category): category is number => category !== undefined))].sort((a, b) => a - b);
+  get availableCategories(): string[] {
+    return [
+      ...new Set(
+        this.transactions.map(transaction => transaction.category_name ?? '')
+      )
+    ]
+    .filter(name => name !== '')
+    .sort();
   }
 
   get filteredTransactions(): TransactionModel[] {
@@ -81,9 +93,9 @@ export class ExpensesComponent {
       const date = this.transactionDate(transaction);
       const yearMatches = this.selectedYear === 'all' || date?.getFullYear() === Number(this.selectedYear);
       const monthMatches = this.selectedMonth === 'all' || date?.getMonth() === Number(this.selectedMonth);
-      const categoryMatches = this.selectedCategory === 'all' || transaction.category === Number(this.selectedCategory);
+      const categoryMatches = this.selectedCategory === 'all' || transaction.category_name === this.selectedCategory;
       const typeMatches = this.selectedType === 'all' || (this.selectedType === 'expense' ? this.isExpense(transaction) : !this.isExpense(transaction));
-      const text = `${transaction.description ?? ''} ${this.categoryLabel(transaction.category)}`.toLocaleLowerCase();
+      const text = `${transaction.description ?? ''} ${this.categoryLabel(transaction.category_name)}`.toLocaleLowerCase();
       return !!yearMatches && !!monthMatches && categoryMatches && typeMatches && (!query || text.includes(query));
     }).sort((a, b) => {
       const difference = (this.transactionDate(b)?.getTime() ?? 0) - (this.transactionDate(a)?.getTime() ?? 0);
@@ -102,7 +114,7 @@ export class ExpensesComponent {
   setSearch(value: string): void { this.searchTerm = value; this.resetPage(); }
   previousPage(): void { if (this.currentPage > 1) this.currentPage--; }
   nextPage(): void { if (this.currentPage < this.totalPages) this.currentPage++; }
-  categoryLabel(category?: number): string { return category === undefined || category === null ? 'Uncategorized' : `Category ${category}`; }
+  categoryLabel(category?: string): string { return category === undefined || category === null ? 'Uncategorized' : `${category}`; }
   isExpense(transaction: TransactionModel): boolean { return !!transaction.withdrawal && transaction.withdrawal > 0; }
   transactionAmount(transaction: TransactionModel): number { return this.isExpense(transaction) ? transaction.withdrawal ?? 0 : transaction.deposit ?? 0; }
 
