@@ -19,6 +19,8 @@ import { OpenApiHttpParams, QueryParamStyle } from '../query.params';
 // @ts-ignore
 import { ExpenseModel } from '../model/expenseModel';
 // @ts-ignore
+import { ExpenseResponse } from '../model/expenseResponse';
+// @ts-ignore
 import { HTTPValidationError } from '../model/hTTPValidationError';
 // @ts-ignore
 import { TransactionModel } from '../model/transactionModel';
@@ -218,33 +220,24 @@ export class ExpensesService extends BaseService {
     }
 
     /**
-     * Get Yearly Expenses
-     * @endpoint get /expenses/yearly
-     * @param year 
+     * Get Expenses
+     * @endpoint get /expenses
      * @param page 
-     * @param limit 
+     * @param pageSize 
+     * @param year 
+     * @param month 
+     * @param categoryId 
+     * @param search 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public getYearlyExpensesExpensesYearlyGet(year: number, page?: number, limit?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public getYearlyExpensesExpensesYearlyGet(year: number, page?: number, limit?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public getYearlyExpensesExpensesYearlyGet(year: number, page?: number, limit?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public getYearlyExpensesExpensesYearlyGet(year: number, page?: number, limit?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (year === null || year === undefined) {
-            throw new Error('Required parameter year was null or undefined when calling getYearlyExpensesExpensesYearlyGet.');
-        }
+    public getExpensesExpensesGet(page?: number, pageSize?: number, year?: number, month?: number, categoryId?: number, search?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ExpenseResponse>;
+    public getExpensesExpensesGet(page?: number, pageSize?: number, year?: number, month?: number, categoryId?: number, search?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ExpenseResponse>>;
+    public getExpensesExpensesGet(page?: number, pageSize?: number, year?: number, month?: number, categoryId?: number, search?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ExpenseResponse>>;
+    public getExpensesExpensesGet(page?: number, pageSize?: number, year?: number, month?: number, categoryId?: number, search?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarQueryParameters = new OpenApiHttpParams(this.encoder);
-
-        localVarQueryParameters = this.addToHttpParams(
-            localVarQueryParameters,
-            'year',
-            <any>year,
-            QueryParamStyle.Form,
-            true,
-        );
-
 
         localVarQueryParameters = this.addToHttpParams(
             localVarQueryParameters,
@@ -257,14 +250,53 @@ export class ExpensesService extends BaseService {
 
         localVarQueryParameters = this.addToHttpParams(
             localVarQueryParameters,
-            'limit',
-            <any>limit,
+            'page_size',
+            <any>pageSize,
+            QueryParamStyle.Form,
+            true,
+        );
+
+
+        localVarQueryParameters = this.addToHttpParams(
+            localVarQueryParameters,
+            'year',
+            <any>year,
+            QueryParamStyle.Form,
+            true,
+        );
+
+
+        localVarQueryParameters = this.addToHttpParams(
+            localVarQueryParameters,
+            'month',
+            <any>month,
+            QueryParamStyle.Form,
+            true,
+        );
+
+
+        localVarQueryParameters = this.addToHttpParams(
+            localVarQueryParameters,
+            'category_id',
+            <any>categoryId,
+            QueryParamStyle.Form,
+            true,
+        );
+
+
+        localVarQueryParameters = this.addToHttpParams(
+            localVarQueryParameters,
+            'search',
+            <any>search,
             QueryParamStyle.Form,
             true,
         );
 
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (HTTPBearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('HTTPBearer', 'Authorization', localVarHeaders, 'Bearer ');
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
             'application/json'
@@ -289,9 +321,9 @@ export class ExpensesService extends BaseService {
             }
         }
 
-        let localVarPath = `/expenses/yearly`;
+        let localVarPath = `/expenses`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<any>('get', `${basePath}${localVarPath}`,
+        return this.httpClient.request<ExpenseResponse>('get', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters.toHttpParams(),

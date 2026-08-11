@@ -3,6 +3,7 @@ README.md
 api.base.service.ts
 api.module.ts
 api/api.ts
+api/auth.service.ts
 api/budgets.service.ts
 api/categories.service.ts
 api/default.service.ts
@@ -17,6 +18,7 @@ model/budgetModel.ts
 model/categoryModelInput.ts
 model/categoryModelOutput.ts
 model/expenseModel.ts
+model/expenseResponse.ts
 model/hTTPValidationError.ts
 model/locationInner.ts
 model/merchantModel.ts

@@ -91,6 +91,15 @@ constructor({ accessToken, apiKeys, basePath, credentials, encodeParam, encoder,
         }
         this.encodeParam = encodeParam ?? (param => this.defaultEncodeParam(param));
         this.credentials = credentials ?? {};
+
+        // init default HTTPBearer credential
+        if (!this.credentials['HTTPBearer']) {
+            this.credentials['HTTPBearer'] = () => {
+                return typeof this.accessToken === 'function'
+                    ? this.accessToken()
+                    : this.accessToken;
+            };
+        }
     }
 
     /**
@@ -142,8 +151,8 @@ constructor({ accessToken, apiKeys, basePath, credentials, encodeParam, encoder,
      * @return True if the given MIME is JSON, false otherwise.
      */
     public isJsonMime(mime: string): boolean {
-        const jsonMime: RegExp = new RegExp('^(application\/json|[^;/ \t]+\/[^;/ \t]+[+]json)[ \t]*(;.*)?$', 'i');
-        return mime !== null && (jsonMime.test(mime) || mime.toLowerCase() === 'application/json-patch+json');
+        const jsonMime: RegExp = /^(application\/json|[^;/ \t]+\/[^;/ \t]+[+]json)[ \t]*(;.*)?$/i;
+        return mime !== null && jsonMime.test(mime);
     }
 
     public lookupCredential(key: string): string | undefined {

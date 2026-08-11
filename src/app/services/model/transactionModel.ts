@@ -12,7 +12,8 @@
 export interface TransactionModel { 
     id: number;
     date?: string | null;
-    category?: number;
+    category_id?: number;
+    category_name?: string;
     description?: string | null;
     withdrawal?: number | null;
     deposit?: number | null;

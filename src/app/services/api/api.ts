@@ -1,3 +1,5 @@
+export * from './auth.service';
+import { AuthService } from './auth.service';
 export * from './budgets.service';
 import { BudgetsService } from './budgets.service';
 export * from './categories.service';
@@ -10,4 +12,4 @@ export * from './merchant.service';
 import { MerchantService } from './merchant.service';
 export * from './source.service';
 import { SourceService } from './source.service';
-export const APIS = [BudgetsService, CategoriesService, DefaultService, ExpensesService, MerchantService, SourceService];
+export const APIS = [AuthService, BudgetsService, CategoriesService, DefaultService, ExpensesService, MerchantService, SourceService];
