@@ -1,0 +1,272 @@
+.budgets-page { 
+    display: grid; 
+    gap: 28px 
+}
+
+.page-header, .section-title { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    gap: 16px; 
+}
+
+.page-header p, .page-header h2, .section-title p, .section-title h3 { 
+    margin: 0; 
+}
+
+.page-header p, .section-title p { 
+    color: var(--text-secondary); 
+    font-size: 13px; 
+    font-weight: 600; 
+    text-transform: uppercase; 
+    letter-spacing: .04em; 
+}
+
+.page-header h2 { 
+    margin-top: 5px; 
+    font-size: 27px; 
+    font-weight: 700; 
+}
+
+.section-title h3 { 
+    margin-top: 4px; 
+    font-size: 20px; 
+}
+
+.month-selector { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 4px; 
+    align-self: center; 
+    padding: 4px 8px; 
+    border: 1px solid var(--border); 
+    border-radius: 10px; 
+    background: var(--surface); 
+}
+
+.month-selector select { 
+    min-width: 132px; 
+    padding: 8px 28px 8px 10px; 
+    border: 0; 
+    outline: 0; 
+    background: transparent; 
+    color: var(--text-primary); 
+    font: inherit; 
+    font-size: 16px; 
+    font-weight: 700; 
+    cursor: pointer; 
+}
+
+.sr-only { 
+    position: absolute; 
+    width: 1px; 
+    height: 1px; 
+    padding: 0; 
+    margin: -1px; 
+    overflow: hidden; 
+    clip: rect(0, 0, 0, 0); 
+    white-space: nowrap; 
+    border: 0; 
+}
+
+.monthly-section, .recurring-section { 
+    display: grid; 
+    gap: 16px; 
+}
+
+.total-budget-card { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    min-height: 132px; 
+    padding: 24px; 
+    // border: 1px solid #cfe9df; 
+    // border-radius: 12px; 
+    background: linear-gradient(110deg, #f2fbf7, #fff); 
+    box-shadow: none; 
+}
+
+.total-budget-card span, .category-budget-card span { 
+    display: block; 
+    color: var(--text-secondary); 
+    font-size: 13px; 
+    font-weight: 600; 
+}
+
+.total-budget-card strong { 
+    display: block; 
+    margin-top: 8px; 
+    color: var(--primary); 
+    font-size: 32px; 
+}
+
+.total-budget-card > mat-icon { 
+    width: 44px; 
+    height: 44px; 
+    padding: 10px; 
+    border-radius: 12px; 
+    background: #dff5eb; 
+    color: var(--accent); 
+    font-size: 24px; 
+}
+
+.empty-total { 
+    border-style: dashed; 
+    background: var(--surface); 
+}
+
+.empty-total strong { 
+    color: var(--text-secondary); 
+    font-size: 24px; 
+}
+
+.category-grid {  
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 12px; 
+    padding: 12px;
+}
+
+.edit-button {
+  font-weight: 600;
+}
+
+.delete-button {
+  font-weight: 600;
+}
+
+.category-budget-card { 
+    display: grid; 
+    width: 13%; 
+    align-items: center; 
+    gap: 28px; 
+    min-height: 112px; 
+    padding: 18px 20px; 
+    padding-bottom: 0;
+    border: 1px solid var(--border); 
+    border-radius: 10px; 
+    background: var(--surface); 
+    box-shadow: none; 
+}
+
+.budget-content {
+    border: 1px solid #cfe9df; 
+    border-radius: 12px; 
+    background: linear-gradient(110deg, #f2fbf7, #fff); 
+}
+
+.category-name { 
+    color: var(--text-primary) !important; 
+    font-size: 15px !important; 
+}
+
+.category-budget-card strong { 
+    display: block; 
+    margin: 8px 0 3px; 
+    font-size: 22px; 
+}
+
+.monthly-label { 
+    font-weight: 400 !important; 
+}
+
+.category-progress { 
+    height: 14px; 
+    --mdc-linear-progress-track-height: 12px; 
+    --mdc-linear-progress-active-indicator-height: 12px; 
+    --mdc-linear-progress-active-indicator-color: #20b866; 
+    border: 1px solid #172033; 
+    overflow: hidden; 
+}
+
+.category-progress ::ng-deep .mdc-linear-progress__buffer-bar { 
+    background-color: #fff; 
+}
+
+.recurring-section { 
+    padding-top: 24px; 
+    border-top: 1px solid var(--border); 
+}
+
+.count-pill { 
+    padding: 6px 10px; 
+    border-radius: 999px; 
+    background: #eef2f7; 
+    color: var(--text-secondary); 
+    font-size: 12px; 
+    font-weight: 600; 
+}
+
+.recurring-list { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); 
+    gap: 12px; 
+}
+
+.recurring-list article { 
+    display: grid; 
+    grid-template-columns: 40px 1fr auto; 
+    align-items: center; 
+    gap: 12px; 
+    padding: 16px; 
+    border: 1px solid var(--border); 
+    border-radius: 10px; 
+    background: var(--surface); 
+}
+
+.recurring-list strong, .recurring-list span { 
+    display: block; 
+}
+
+.recurring-list span { 
+    margin-top: 3px; 
+    color: var(--text-secondary); 
+    font-size: 12px; 
+}
+
+.recurring-list b { 
+    font-size: 16px; 
+}
+
+.recurring-icon { 
+    display: grid; 
+    width: 40px; 
+    height: 40px; 
+    place-items: center; 
+    border-radius: 10px; 
+    background: #eef6f3; 
+    color: var(--accent); 
+}
+
+.empty-state { 
+    padding: 22px; 
+    border: 1px dashed var(--border); 
+    border-radius: 10px; 
+    color: var(--text-secondary); 
+    text-align: center; 
+    background: var(--surface); 
+}
+
+@media (max-width: 600px) { 
+    .page-header { 
+    align-items: flex-start; 
+    flex-direction: column; 
+}
+
+.page-header button { 
+    width: 100%; 
+}
+
+.total-budget-card { 
+    align-items: flex-start; 
+}
+
+.category-budget-card { 
+    grid-template-columns: 1fr; 
+    gap: 16px; 
+}
+
+.category-progress { 
+    width: 100%; 
+} }

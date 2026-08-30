@@ -1,0 +1,54 @@
+<h2 mat-dialog-title>Add Budget</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="budget-form">
+    <div class="field-label">Budget type</div>
+    <mat-radio-group formControlName="type" class="budget-type">
+      <mat-radio-button value="total">Total budget</mat-radio-button>
+      <mat-radio-button value="category">Category budget</mat-radio-button>
+    </mat-radio-group>
+
+    @if (isCategoryBudget) {
+      <mat-form-field appearance="outline">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="categoryId" panelClass="select-panel">
+          @for (category of categories; track category.id) {
+            <mat-option [value]="category.id">{{ category.name }}</mat-option>
+          }
+        </mat-select>
+        @if (form.controls['categoryId'].hasError('required')) {
+          <mat-error>Select a category</mat-error>
+        }
+      </mat-form-field>
+    }
+
+    <mat-form-field appearance="outline">
+      <mat-label>Amount</mat-label>
+      <span matTextPrefix>₹&nbsp;</span>
+      <input matInput type="number" min="1" step="1" formControlName="amount" placeholder="8,000">
+      @if (form.controls['amount'].invalid && form.controls['amount'].touched) {
+        <mat-error>Enter an amount greater than zero</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-checkbox formControlName="recurring">Repeat every month</mat-checkbox>
+
+    @if (!form.controls['recurring'].value) {
+      <mat-form-field appearance="outline">
+        <mat-label>Budget month</mat-label>
+        <mat-select [value]="selectedMonthNumber" (selectionChange)="selectMonth($event.value)" panelClass="select-panel">
+          @for (month of months; track month.value) {
+            <mat-option [value]="month.value">{{ month.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    } @else {
+      <p class="recurring-note">This budget will apply every month.</p>
+    }
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="close()">Cancel</button>
+  <button mat-raised-button color="primary" type="button" [disabled]="form.invalid" (click)="save()">Save Budget</button>
+</mat-dialog-actions>

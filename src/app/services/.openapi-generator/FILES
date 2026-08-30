@@ -15,6 +15,7 @@ encoder.ts
 git_push.sh
 index.ts
 model/budgetModel.ts
+model/budgetResponse.ts
 model/categoryModelInput.ts
 model/categoryModelOutput.ts
 model/expenseModel.ts

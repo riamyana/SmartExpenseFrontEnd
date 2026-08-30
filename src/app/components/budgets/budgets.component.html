@@ -1,1 +1,189 @@
-<p>budgets works!</p>
+<div class="budgets-page">
+  <header class="page-header">
+    <div><p>Budget</p><h2>Manage your monthly spending limits</h2></div>
+    <button mat-raised-button color="primary" (click)="openAddBudget()"><mat-icon>add</mat-icon>Add Budget</button>
+  </header>
+
+  <form [formGroup]="formGroup">
+    <nav class="month-selector" aria-label="Budget month">
+      <button mat-icon-button (click)="changeMonth(-1)" aria-label="Previous month"><mat-icon>chevron_left</mat-icon></button>
+      <label class="sr-only" for="budget-month">Select month</label>
+      <select
+        id="budget-month"
+        formControlName="monthControl"
+      >
+        @for (month of months; track month.value) {
+          <option [value]="month.value">
+            {{ month.label }}
+          </option>
+        }
+      </select>
+      <button mat-icon-button (click)="changeMonth(1)" aria-label="Next month"><mat-icon>chevron_right</mat-icon></button>
+    </nav>
+
+    <section class="monthly-section">
+      <div class="section-title"><div><p>Monthly plan</p><h3>{{ monthLabel }} budgets</h3></div></div>
+      @if (monthlyBudget; as total) {
+        <mat-card class="total-budget-card"><div><span>Total monthly budget</span><strong>{{ formatAmount(total.amount) }}</strong></div><mat-icon>account_balance_wallet</mat-icon></mat-card>
+      } @else {
+        <div class="total-budget-card empty-total">
+          <div>
+            <span>Total monthly budget</span>
+            <strong>Not set</strong>
+          </div>
+        </div>
+      }
+      <div class="category-grid" *ngIf="monthlyCategoricalBudgets.length">
+        <mat-card class="category-budget-card" *ngFor="let budget of monthlyCategoricalBudgets">
+          <div><span class="category-name">{{ budget.category_name }}</span><strong>{{ formatAmount(budget.amount) }}</strong><span class="monthly-label">Monthly category budget</span></div>
+          @if (monthlyBudget; as total) {
+            <mat-progress-bar class="category-progress" mode="determinate" [value]="budgetProgress(budget.amount, total.amount)"></mat-progress-bar>
+          }
+        </mat-card>
+      </div>
+    </section>
+
+    <section class="recurring-section">
+      <div class="section-title">
+        <div>
+          <p>Applies every month default</p>
+          <h3>Recurring budgets</h3>
+        </div>
+      </div>
+      <div class="budget-content">
+        @if (recurringMonthlyBudget; as total) {
+            <mat-card class="total-budget-card">
+              <div>
+                <span>Total monthly budget</span>
+                <strong>{{ formatAmount(total.amount) }}</strong>
+              </div>
+              <mat-icon>account_balance_wallet</mat-icon>
+            </mat-card>
+        } @else {
+          <div class="total-budget-card empty-total">
+            <div>
+              <span>Total monthly budget</span>
+              <strong>Not set</strong>
+            </div>
+          </div>
+        }
+        <div class="section-title" style="padding-left: 12px;">
+          <p>Categorical Budget</p>
+        </div>
+        <div class="category-grid" *ngIf="recurringCategoricalBudgets.length">
+          <mat-card
+            class="category-budget-card"
+            *ngFor="let budget of recurringCategoricalBudgets"
+          >
+            <div>
+
+              <span class="category-name">
+                {{ budget.category_name }}
+              </span>
+
+              @if (editingBudgetId === budget.id) {
+                <mat-form-field appearance="outline" class="amount-field">
+                  <mat-label>Budget amount</mat-label>
+
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="editAmount"
+                  />
+
+                  @if (editAmount.hasError('required')) {
+                    <mat-error>Amount is required</mat-error>
+                  }
+
+                  @if (editAmount.hasError('min')) {
+                    <mat-error>Amount must be greater than 0</mat-error>
+                  }
+                </mat-form-field>
+
+              } @else {
+                <strong>
+                  {{ formatAmount(budget.amount) }}
+                </strong>
+
+                @if (recurringMonthlyBudget; as total) {
+                  <mat-progress-bar
+                    class="category-progress"
+                    mode="determinate"
+                    [value]="budgetProgress(budget.amount, total.amount)"
+                  ></mat-progress-bar>
+
+                  <span>
+                    {{ budgetProgress(budget.amount, total.amount) }}% of total budget
+                  </span>
+                }
+
+              }
+
+            </div>
+
+            <mat-card-actions align="end">
+
+              @if (editingBudgetId === budget.id) {
+
+                <button
+                  mat-button
+                  class="cancel-button"
+                  type="button"
+                  (click)="cancelEdit()"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  mat-flat-button
+                  class="save-button"
+                  type="button"
+                  [disabled]="editAmount.invalid"
+                  (click)="saveEdit(budget)"
+                >
+                  Save
+                </button>
+
+              } @else {
+
+                <button
+                  mat-button
+                  class="edit-button"
+                  type="button"
+                  (click)="editBudget(budget)"
+                >
+                  Edit
+                </button>
+
+                <button
+                  mat-button
+                  class="delete-button"
+                  type="button"
+                  (click)="confirmDelete(budget)"
+                >
+                  Delete
+                </button>
+
+              }
+
+            </mat-card-actions>
+
+          </mat-card>
+        </div>
+      </div>
+    </section>
+
+    <ng-template #deleteDialog let-data>
+      <h2 mat-dialog-title>Delete Budget</h2>
+
+      <mat-dialog-content>
+        Are you sure you want to delete <b>{{ data.name }}</b>?
+      </mat-dialog-content>
+
+      <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close="false">Cancel</button>
+        <button mat-raised-button color="warn" [mat-dialog-close]="true">Delete</button>
+      </mat-dialog-actions>
+    </ng-template>
+  </form>
+</div>
