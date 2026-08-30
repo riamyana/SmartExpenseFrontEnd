@@ -22,15 +22,18 @@
 .page-heading p, .page-heading h2 { margin: 0; }
 .page-heading p { color: var(--text-secondary); font-size: 12px; font-weight: 600; text-transform: uppercase; }
 .page-heading h2 { margin-top: 4px; font-size: 24px; }
-.filters-card { padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 8px 24px rgba(17, 24, 39, .05); }
+.filters-card { padding: 16px 20px 0; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 8px 24px rgba(17, 24, 39, .05); }
 .filter-row { display: flex; align-items: center; gap: 14px; flex-wrap: nowrap; width: 100%; }
 .filter-row .upload-button { margin-left: auto; white-space: nowrap; }
+.filter-field { width: 190px; }
+.category-field { width: 160px; }
 .filter-control, .search-control { display: flex; align-items: center; min-height: 40px; color: var(--text-secondary); border: 1px solid var(--border); border-radius: 7px; background: #fff; }
 .filter-control { gap: 8px; padding: 0 10px 0 12px; }
 .filter-control span { color: #64748b; font-size: 13px; font-weight: 600; }
 .filter-control select { min-width: 68px; color: var(--text-primary); font: inherit; font-size: 14px; border: 0; outline: 0; background: transparent; cursor: pointer; }
-.search-control { min-width: 230px; gap: 8px; padding: 0 12px; }
-.search-control input { width: 100%; color: var(--text-primary); font: inherit; border: 0; outline: 0; background: transparent; }
+.date-filter-control input { min-width: 130px; color: var(--text-primary); font: inherit; font-size: 14px; border: 0; outline: 0; background: transparent; }
+.apply-filter-button { min-height: 40px; padding: 0 20px; color: var(--primary); font: inherit; font-weight: 600; border: 1px solid var(--primary); border-radius: 8px; background: transparent; cursor: pointer; }
+.apply-filter-button:hover { background: #eef4ff; }
 .transactions-table .mat-column-date { width: 120px; }
 .transactions-table .mat-column-category { width: 180px; }
 .transactions-table .mat-column-amount { width: 150px; }
@@ -44,7 +47,7 @@
 
 @media (max-width: 640px) {
   .filter-row { align-items: stretch; flex-direction: column; }
-  .filter-control, .search-control, .filter-row .upload-button { width: 100%; }
+  .filter-control, .search-control, .apply-filter-button, .filter-row .upload-button { width: 100%; }
   .filter-row .upload-button { margin-left: 0; }
   .pagination { font-size: 13px; }
 }
@@ -326,6 +329,18 @@
 
 .error-state {
   color: #b42318;
+}
+
+.mat-mdc-option {
+  color: #1f2937 !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected {
+  color: #1f2937 !important;
+}
+
+.mat-mdc-option:hover {
+  background: #f3f4f6 !important;
 }
 
 @media (max-width: 640px) {

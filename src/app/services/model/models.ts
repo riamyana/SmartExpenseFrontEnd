@@ -1,4 +1,5 @@
 export * from './budgetModel';
+export * from './budgetResponse';
 export * from './categoryModelInput';
 export * from './categoryModelOutput';
 export * from './expenseModel';

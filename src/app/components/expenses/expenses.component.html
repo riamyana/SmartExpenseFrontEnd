@@ -1,18 +1,32 @@
 <section class="transactions-page">
   <div class="page-heading"><p>Saved records</p><h2>Transactions</h2></div>
-  <div class="filters-card">
+  <form class="filters-card" [formGroup]="formGroup" (ngSubmit)="applyFilters()">
     <div class="filter-row">
-      <label class="filter-control"><span>Year</span><select [value]="selectedYear" (change)="setYear($any($event.target).value)"><option value="all">All</option><option *ngFor="let year of availableYears" [value]="year">{{ year }}</option></select></label>
-      <label class="filter-control"><span>Month</span><select [value]="selectedMonth" (change)="setMonth($any($event.target).value)"><option value="all">All</option><option *ngFor="let month of months; let i = index" [value]="i">{{ month }}</option></select></label>
-      <label class="search-control"><span aria-hidden="true">⌕</span><input type="search" placeholder="Search" [value]="searchTerm" (input)="setSearch($any($event.target).value)" /></label>
-        <label class="filter-control"><span>Category</span><select [value]="selectedCategory" (change)="setCategory($any($event.target).value)"><option value="all">All</option><option *ngFor="let category of availableCategories" [value]="category">{{ categoryLabel(category) }}</option></select></label>
-      <!-- <label class="filter-control"><span>Type</span><select [value]="selectedType" (change)="setType($any($event.target).value)"><option value="all">All</option><option value="expense">Expense</option><option value="income">Income</option></select></label> -->
-      <!-- <label class="filter-control"><span>Sort</span><select [value]="sortOrder" (change)="setSort($any($event.target).value)"><option value="latest">Latest</option><option value="oldest">Oldest</option></select></label> -->
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>From Date</mat-label>
+        <input matInput [matDatepicker]="fromDatePicker" formControlName="fromDate">
+        <mat-datepicker-toggle matIconSuffix [for]="fromDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #fromDatePicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>To Date</mat-label>
+        <input matInput [matDatepicker]="toDatePicker" formControlName="toDate">
+        <mat-datepicker-toggle matIconSuffix [for]="toDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #toDatePicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="filter-field category-field">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="category" panelClass="select-panel">
+          <mat-option value="">All</mat-option>
+          <mat-option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-flat-button type="submit" class="apply-filter-button" [disabled]="formGroup.invalid" (click)="loadTransactions()">Apply</button>
       <button mat-raised-button class="action-button upload-button" (click)="openUploadDialog()" [disabled]="uploadDialogOpened">+ Add Expense</button>
     </div>
-  </div>
+  </form>
   <div class="table-container" *ngIf="transactions.length > 0; else transactionState">
-    <table mat-table [dataSource]="pagedTransactions" class="transactions-table">
+    <table mat-table [dataSource]="transactions" class="transactions-table">
       <ng-container matColumnDef="srNo"><th mat-header-cell *matHeaderCellDef>Sr. No.</th><td mat-cell *matCellDef="let row; let i = index">{{ ((currentPage - 1) * pageSize) + i + 1 }}</td></ng-container>
       <ng-container matColumnDef="date"><th mat-header-cell *matHeaderCellDef>Date</th><td mat-cell *matCellDef="let element">{{ element.date | date:'dd MMM YYYY' }}</td></ng-container>
       <ng-container matColumnDef="description"><th mat-header-cell *matHeaderCellDef>Description</th><td mat-cell *matCellDef="let element" class="description-cell">{{ element.description || '—' }}</td></ng-container>
@@ -20,7 +34,7 @@
       <ng-container matColumnDef="deposit"><th mat-header-cell *matHeaderCellDef class="amount-header">Deposit (₹)</th><td mat-cell *matCellDef="let element" class="amount-cell"><span class="amount deposit-amount">{{ element.deposit ? (element.deposit | number:'1.0-2') : '—' }}</span></td></ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr><tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    <div class="no-filtered-results" *ngIf="filteredTransactions.length === 0">No transactions match these filters.</div>
+    <div class="no-filtered-results" *ngIf="transactions.length === 0">No transactions match these filters.</div>
   </div>
   <ng-template #transactionState><div class="empty-state" *ngIf="!loadFailed">No saved transactions yet.</div><div class="empty-state error-state" *ngIf="loadFailed">Could not load saved transactions.</div></ng-template>
   <footer class="pagination" *ngIf="transactions.length > 0"><button type="button" (click)="previousPage()" [disabled]="currentPage === 1">‹ Previous</button><span>Page {{ currentPage }} of {{ totalPages }}</span><button type="button" (click)="nextPage()" [disabled]="currentPage === totalPages">Next ›</button></footer>

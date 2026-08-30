@@ -100,22 +100,22 @@ mat-dialog-title {
   box-shadow: 0 24px 64px rgba(17, 24, 39, 0.24);
 }
 
-.cdk-overlay-container .upload-expense-select-panel {
+.cdk-overlay-container .select-panel {
   background: white !important;
   border-radius: 16px !important;
 }
 
-.cdk-overlay-container .upload-expense-select-panel .mat-mdc-option {
+.cdk-overlay-container .select-panel .mat-mdc-option {
   min-height: 44px !important;
 }
 
-.cdk-overlay-container .upload-expense-select-panel .mdc-list-item__primary-text {
+.cdk-overlay-container .select-panel .mdc-list-item__primary-text {
   color: #222 !important;
   font-size: 14px !important;
   font-weight: 500 !important;
 }
 
-.cdk-overlay-container .upload-expense-select-panel .mat-mdc-option:hover {
+.cdk-overlay-container .select-panel .mat-mdc-option:hover {
   background: #f5f5f5 !important;
 }
 

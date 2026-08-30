@@ -224,18 +224,18 @@ export class ExpensesService extends BaseService {
      * @endpoint get /expenses
      * @param page 
      * @param pageSize 
-     * @param year 
-     * @param month 
+     * @param fromDate 
+     * @param toDate 
      * @param categoryId 
      * @param search 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public getExpensesExpensesGet(page?: number, pageSize?: number, year?: number, month?: number, categoryId?: number, search?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ExpenseResponse>;
-    public getExpensesExpensesGet(page?: number, pageSize?: number, year?: number, month?: number, categoryId?: number, search?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ExpenseResponse>>;
-    public getExpensesExpensesGet(page?: number, pageSize?: number, year?: number, month?: number, categoryId?: number, search?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ExpenseResponse>>;
-    public getExpensesExpensesGet(page?: number, pageSize?: number, year?: number, month?: number, categoryId?: number, search?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getExpensesExpensesGet(page?: number, pageSize?: number, fromDate?: string, toDate?: string, categoryId?: number, search?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ExpenseResponse>;
+    public getExpensesExpensesGet(page?: number, pageSize?: number, fromDate?: string, toDate?: string, categoryId?: number, search?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ExpenseResponse>>;
+    public getExpensesExpensesGet(page?: number, pageSize?: number, fromDate?: string, toDate?: string, categoryId?: number, search?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ExpenseResponse>>;
+    public getExpensesExpensesGet(page?: number, pageSize?: number, fromDate?: string, toDate?: string, categoryId?: number, search?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarQueryParameters = new OpenApiHttpParams(this.encoder);
 
@@ -259,8 +259,8 @@ export class ExpensesService extends BaseService {
 
         localVarQueryParameters = this.addToHttpParams(
             localVarQueryParameters,
-            'year',
-            <any>year,
+            'from_date',
+            <any>fromDate,
             QueryParamStyle.Form,
             true,
         );
@@ -268,8 +268,8 @@ export class ExpensesService extends BaseService {
 
         localVarQueryParameters = this.addToHttpParams(
             localVarQueryParameters,
-            'month',
-            <any>month,
+            'to_date',
+            <any>toDate,
             QueryParamStyle.Form,
             true,
         );
@@ -354,6 +354,9 @@ export class ExpensesService extends BaseService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (HTTPBearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('HTTPBearer', 'Authorization', localVarHeaders, 'Bearer ');
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
             'application/json'

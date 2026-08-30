@@ -9,11 +9,12 @@
  */
 
 
-export interface BudgetModel { 
+export interface BudgetResponse { 
     id?: number | null;
     amount?: number;
     month?: string | null;
     category_id?: number | null;
     is_recurring?: boolean;
+    category_name?: string | null;
 }
 

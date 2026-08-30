@@ -1,0 +1,29 @@
+.budget-form {
+  display: grid;
+  gap: 16px;
+  min-width: min(420px, 78vw);
+  padding-top: 4px;
+  margin-right: 20px;
+}
+
+.field-label {
+  margin-bottom: -8px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.budget-type {
+  display: flex;
+  gap: 24px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.recurring-note {
+  margin: -6px 0 2px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
