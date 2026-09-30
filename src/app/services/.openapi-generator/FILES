@@ -6,6 +6,7 @@ api/api.ts
 api/auth.service.ts
 api/budgets.service.ts
 api/categories.service.ts
+api/dashboard.service.ts
 api/default.service.ts
 api/expenses.service.ts
 api/merchant.service.ts
@@ -16,14 +17,19 @@ git_push.sh
 index.ts
 model/budgetModel.ts
 model/budgetResponse.ts
+model/categoryExpense.ts
 model/categoryModelInput.ts
 model/categoryModelOutput.ts
+model/dashboardResponse.ts
+model/dashboardSummary.ts
 model/expenseModel.ts
 model/expenseResponse.ts
 model/hTTPValidationError.ts
 model/locationInner.ts
 model/merchantModel.ts
 model/models.ts
+model/monthlyExpense.ts
+model/recentExpense.ts
 model/sourceModel.ts
 model/transactionModel.ts
 model/validationError.ts
