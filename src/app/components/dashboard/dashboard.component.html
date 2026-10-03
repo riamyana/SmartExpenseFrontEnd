@@ -1,21 +1,165 @@
 <section class="dashboard">
-  <div class="page-heading">
-    <p>Overview</p>
-    <h2>Dashboard</h2>
+  <div class="dashboard-header">
+    <div>
+      <p class="eyebrow">Financial overview</p>
+      <h2>Dashboard</h2>
+      <p class="subheading">See where your money is going at a glance.</p>
+    </div>
+    <div class="filters">
+      <mat-form-field appearance="outline">
+        <mat-icon matPrefix>calendar_month</mat-icon>
+        <mat-select [(value)]="selectedMonth" (selectionChange)="onFiltersChanged()" aria-label="Select month">
+          @for (month of months; track month.value) { 
+            <mat-option [value]="month.value">{{ month.label }}</mat-option> 
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-icon matPrefix>category</mat-icon>
+        <mat-select [(value)]="selectedCategoryId" (selectionChange)="onFiltersChanged()" aria-label="Select category">
+          <mat-option [value]="null">All categories</mat-option>
+          @for (category of categories; track category.id) { 
+            <mat-option [value]="category.id">{{ category.name }}</mat-option> 
+          }</mat-select>
+        </mat-form-field>
+    </div>
   </div>
-
-  <div class="summary-grid">
-    <article>
-      <span>Total Spend</span>
-      <strong>--</strong>
+  @if (loadError) { 
+    <div class="status-message" role="alert">
+      <mat-icon>cloud_off</mat-icon>
+      <span>Dashboard data is not available yet. Add 
+        <code>GET /dashboard</code> to load your live overview.
+      </span>
+      <button mat-button type="button" (click)="onFiltersChanged()">Retry</button>
+    </div> 
+  }
+  <div class="metrics" [class.loading]="isLoading">
+    <article class="metric-card">
+      <span class="metric-icon spend">
+        <mat-icon>payments</mat-icon>
+      </span>
+      <div>
+        <p>Total expenses</p>
+        <strong>{{ dashboard?.summary?.total_expenses ?? 0 | currency:'INR':'symbol-narrow':'1.0-0' }}</strong>
+        <small>All recorded expenses</small>
+      </div>
     </article>
-    <article>
-      <span>Monthly Budget</span>
-      <strong>--</strong>
+    <article class="metric-card">
+      <span class="metric-icon month">
+        <mat-icon>calendar_today</mat-icon>
+      </span>
+      <div>
+        <p>This month</p>
+        <strong>{{ dashboard?.summary?.monthly_expenses ?? 0 | currency:'INR':'symbol-narrow':'1.0-0' }}</strong>
+        <small>{{ selectedMonthLabel }}</small>
+      </div>
     </article>
-    <article>
-      <span>Categories</span>
-      <strong>--</strong>
+    <article class="metric-card">
+      <span class="metric-icon budget">
+        <mat-icon>account_balance_wallet</mat-icon>
+      </span>
+      <div>
+        <p>Budget remaining</p>
+        <strong>{{ dashboard?.summary?.budget_remaining ?? 0 | currency:'INR':'symbol-narrow':'1.0-0' }}</strong>
+        <small>of {{ dashboard?.budget ?? 0 | currency:'INR':'symbol-narrow':'1.0-0' }} budget</small>
+      </div>
+    </article>
+    <article class="metric-card">
+      <span class="metric-icon transactions">
+        <mat-icon>receipt_long</mat-icon>
+      </span>
+      <div>
+        <p>Transactions</p>
+        <strong>{{ dashboard?.summary?.transactions ?? 0 }}</strong>
+        <small>in the selected period</small>
+      </div>
     </article>
   </div>
+  <div class="insights-grid">
+    <article class="panel trend-panel">
+      <div class="panel-heading">
+        <div>
+          <h3>Monthly expenses</h3>
+          <p>Your spending trend over the last few months</p>
+        </div>
+        <span class="period-badge">Last 6 months</span>
+      </div><div class="chart-area">
+        @if (dashboard?.monthly_trend?.length) { 
+          <canvas #trendChart></canvas> 
+        } @else { 
+          <div class="empty-chart">
+            <mat-icon>bar_chart</mat-icon>
+            <span>No spending trend available</span>
+          </div> 
+        }
+      </div>
+    </article>
+    <article class="panel category-panel">
+      <div class="panel-heading">
+        <div>
+          <h3>Expense by category</h3>
+          <p>How your {{ selectedMonthLabel }} spend is split</p>
+        </div>
+      </div>
+      <div class="category-content">
+        @if (dashboard?.category_breakdown?.length) { 
+          <div class="doughnut">
+            <canvas #categoryChart></canvas>
+            <div>
+              <strong>{{ categoryTotal | currency:'INR':'symbol-narrow':'1.0-0' }}</strong>
+              <span>Total</span>
+            </div>
+          </div>
+          <div class="legend">
+            @for (item of dashboard?.category_breakdown; track item.category; let i = $index) { 
+              <div>
+                <span class="dot dot-{{ i }}"></span>
+                <span>{{ item.category }}</span>
+                <strong>{{ item.amount | currency:'INR':'symbol-narrow':'1.0-0' }}</strong>
+              </div> 
+            }
+          </div> 
+        } @else { 
+          <div class="empty-chart">
+            <mat-icon>donut_large</mat-icon>
+            <span>No category data available</span>
+          </div> 
+        }
+      </div>
+    </article>
+  </div>
+  <article class="panel recent-panel">
+    <div class="panel-heading">
+      <div>
+        <h3>Recent expenses</h3>
+        <p>Your latest recorded transactions</p>
+      </div>
+      <a routerLink="/expenses">View all <mat-icon>arrow_forward</mat-icon></a>
+    </div>
+    @if (dashboard?.recent_expenses?.length) { 
+      <div class="expense-table" role="table">
+        <div class="table-row table-head" role="row">
+          <span>Date</span>
+          <span>Description</span>
+          <span>Category</span>
+          <span>Amount</span>
+        </div>
+        @for (expense of dashboard?.recent_expenses; track trackExpense($index, expense)) { 
+          <div class="table-row" role="row">
+            <span>{{ expense.date | date:'dd MMM' }}</span>
+            <strong>{{ expense.description }}</strong>
+            <span>
+              <em>{{ expense.category_name || 'Uncategorised' }}</em>
+            </span>
+            <strong class="amount">{{ expense.amount | currency:'INR':'symbol-narrow':'1.0-0' }}</strong>
+          </div> 
+        }
+      </div> 
+    } @else {
+      <div class="empty-recent">
+        <mat-icon>receipt_long</mat-icon>
+        <p>No expenses found for this period.</p>
+      </div> 
+    }
+  </article>
 </section>

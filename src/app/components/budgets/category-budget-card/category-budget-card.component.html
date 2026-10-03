@@ -1,0 +1,153 @@
+<form [formGroup]="formGroup" class="container">
+
+  <mat-card
+    class="budget-card"
+    [class.total-budget-card]="totalMonthly"
+    [class.category-budget-card]="!totalMonthly"
+  >
+
+    <!-- ========================= -->
+    <!-- Header / Amount            -->
+    <!-- ========================= -->
+
+    @if (totalMonthly) {
+
+      <span class="budget-label">
+        Total monthly budget
+      </span>
+
+    } @else {
+
+      <span class="category-name">
+        {{ budget.category_name }}
+      </span>
+
+    }
+
+
+    <!-- ========================= -->
+    <!-- Edit / Display             -->
+    <!-- ========================= -->
+
+    @if (isEditing) {
+
+      <mat-form-field
+        appearance="outline"
+        class="amount-field"
+      >
+        <mat-label>Budget amount</mat-label>
+
+        <input
+          matInput
+          type="number"
+          formControlName="editAmount"
+        />
+
+        @if (editAmount.hasError('required')) {
+          <mat-error>
+            Amount is required
+          </mat-error>
+        }
+
+        @if (editAmount.hasError('min')) {
+          <mat-error>
+            Amount must be greater than 0
+          </mat-error>
+        }
+
+      </mat-form-field>
+
+    } @else {
+
+      <strong class="budget-amount">
+        {{
+          (totalMonthly ? totalAmount : budget.amount)
+          | currency:'INR':'symbol':'1.0-0'
+        }}
+      </strong>
+
+      @if (!totalMonthly && totalAmount && totalAmount > 0) {
+
+        <mat-progress-bar
+          class="category-progress"
+          mode="determinate"
+          [value]="budgetProgress(budget.amount, totalAmount)"
+        ></mat-progress-bar>
+
+        <span class="allocation-label">
+          {{ budgetProgress(budget.amount, totalAmount) | number:'1.0-0' }}%
+          of total budget
+        </span>
+
+      }
+
+    }
+
+
+    <!-- ========================= -->
+    <!-- Total budget icon          -->
+    <!-- ========================= -->
+
+    @if (totalMonthly && !isEditing) {
+
+      <mat-icon class="budget-icon">
+        account_balance_wallet
+      </mat-icon>
+
+    }
+
+
+    <!-- ========================= -->
+    <!-- Actions                    -->
+    <!-- ========================= -->
+
+    <mat-card-actions align="end">
+
+      @if (isEditing) {
+
+        <button
+          mat-button
+          class="cancel-button"
+          type="button"
+          (click)="cancelEdit()"
+        >
+          Cancel
+        </button>
+
+        <button
+          mat-flat-button
+          class="save-button"
+          type="button"
+          [disabled]="editAmount.invalid"
+          (click)="saveEdit()"
+        >
+          Save
+        </button>
+
+      } @else {
+
+        <button
+          mat-button
+          class="edit-button"
+          type="button"
+          (click)="editBudget()"
+        >
+          Edit
+        </button>
+
+        <button
+          mat-button
+          class="delete-button"
+          type="button"
+          (click)="deleteBudget()"
+        >
+          Delete
+        </button>
+
+      }
+
+    </mat-card-actions>
+
+  </mat-card>
+
+</form>

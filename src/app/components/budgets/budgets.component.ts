@@ -15,6 +15,8 @@ import { BudgetResponse } from '../../services';
 import { FormControl, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CategoryBudgetCardComponent } from './category-budget-card/category-budget-card.component';
+import { ConfirmationDialogComponent, ConfirmDialogData } from '../../common/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-budgets',
@@ -28,6 +30,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     MatSnackBarModule,
     MatFormFieldModule,
     ReactiveFormsModule,
+    CategoryBudgetCardComponent,
   ],
   templateUrl: './budgets.component.html',
   styleUrl: './budgets.component.scss'
@@ -49,12 +52,6 @@ export class BudgetsComponent implements OnInit {
   monthlyBudgets: BudgetResponse[] = [];
   recurringBudgets: BudgetResponse[] = [];
   categories: CategoryModelOutput[] = [];
-  editingBudgetId: number | null = null;
-  // editAmount = new FormControl<number | null>(null, [
-  //   Validators.required,
-  //   Validators.min(1)
-  // ]);
-  // monthControl = new FormControl(this.selectedMonth);
   @ViewChild('deleteDialog') deleteDialog!: TemplateRef<any>;
   formGroup!: UntypedFormGroup;
 
@@ -72,12 +69,10 @@ export class BudgetsComponent implements OnInit {
     this.loadBudgets();
   }
 
-  get editAmount(): FormControl { return this.formGroup.get('editAmount') as FormControl; }
   get monthControl(): FormControl { return this.formGroup.get('monthControl') as FormControl; }
 
   initFormGroup() {
     this.formGroup = this.fb.group({
-      editAmount: this.fb.control(Validators.required, Validators.min(1)),
       monthControl: this.fb.control(this.selectedMonth),
     })
   }
@@ -167,65 +162,5 @@ export class BudgetsComponent implements OnInit {
     return `${date.getFullYear()}-${String(
       date.getMonth() + 1
     ).padStart(2, '0')}`;
-  }
-
-  confirmDelete(budget: BudgetResponse): void {
-    const dialogRef = this.dialog.open(this.deleteDialog, {
-      data: budget
-    });
-
-    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-      if (!confirmed) return;
-
-      this.loaderService.show();
-      this.budgetsService.deleteBudgetByIdBudgetIdDelete(budget.id!).subscribe({
-        next: () => {
-          this.snackBar.open('Budget deleted successfully.', '', { duration: 3000, panelClass: ['snackbar-success'] });
-          this.loadBudgets();
-          this.loaderService.hide();
-        },
-        error: (err) => {
-          console.error(err);
-          this.snackBar.open('Failed to delete budget.', '', { duration: 3000, panelClass: ['snackbar-error'] });
-          this.loaderService.hide();
-        }
-      });
-    });
-  }
-
-  editBudget(budget: BudgetModel): void {
-    this.editingBudgetId = budget.id ?? null;
-    this.editAmount.setValue(budget.amount ?? null);
-  }
-
-  cancelEdit(): void {
-    this.editingBudgetId = null;
-    this.editAmount.reset();
-  }
-
-  saveEdit(budget: BudgetResponse): void {
-    const budgetRequest: BudgetModel = {
-      amount: this.editAmount.value ?? 0,
-      category_id: budget.category_id ?? null,
-      month: budget.month ?? null,
-      is_recurring: budget.is_recurring
-    };
-
-    this.loaderService.show();
-    this.budgetsService.saveBudgetBudgetPost(budgetRequest).subscribe({
-      next: () => {
-        this.loaderService.hide();
-        this.snackBar.open('Budget saved successfully.', '', { duration: 3000, panelClass: ['snackbar-success'] });
-        this.loadBudgets();
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error(error);
-        this.loaderService.hide();
-        this.snackBar.open(error.error?.detail ?? 'Unable to save budget. Please try again.', '', { duration: 3500, panelClass: ['snackbar-error'] });
-      }
-    });
-
-    this.editingBudgetId = null;
-    this.editAmount.reset();
   }
 }
